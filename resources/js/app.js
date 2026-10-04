@@ -1,0 +1,25 @@
+import { initCharts } from './charts';
+import { initDropdowns } from './dropdown';
+import { initForms } from './forms';
+import { renderIcons } from './icons';
+import { initLayout } from './layout';
+import { initPalette } from './palette';
+import { initSidebar } from './sidebar';
+import { initTables } from './table';
+import { initTabs } from './tabs';
+import { initTheme } from './theme';
+import { initToasts } from './toast';
+import { initTooltips } from './tooltip';
+
+renderIcons();
+initTheme();
+initSidebar();
+initLayout();
+initDropdowns();
+initTooltips();
+initTabs();
+initTables();
+initToasts();
+initForms();
+initPalette();
+initCharts();

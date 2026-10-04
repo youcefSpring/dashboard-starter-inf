@@ -1,0 +1,438 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../js/**/*.js';
+@source '../../config/ui.php';
+
+/*
+ * Design tokens.
+ * Raw channels live in CSS variables so light/dark themes swap without `dark:` variants.
+ * Brand trio: violet #7638E0 · magenta #DB2D85 · sunset orange #F58B2B
+ */
+:root {
+    --bg: 248 247 252;
+    --surface: 255 255 255;
+    --surface-2: 244 242 250;
+    --surface-3: 235 231 246;
+    --border: 231 227 241;
+    --border-strong: 210 203 230;
+    --fg: 27 21 48;
+    --fg-2: 94 87 120;
+    --fg-3: 120 113 146;
+    --primary: 118 56 224;
+    --primary-hover: 99 40 199;
+    --primary-soft: 241 235 253;
+    --primary-ink: 108 46 214;
+    --on-primary: 255 255 255;
+    --secondary: 205 38 124;
+    --accent: 245 139 43;
+    --info: 74 99 210;
+    --success: 11 127 98;
+    --warning: 161 95 5;
+    --error: 207 45 69;
+    --c1: 118 56 224;
+    --c2: 219 45 133;
+    --c3: 245 139 43;
+    --elev-card: 0 1px 2px rgb(27 21 48 / 0.04), 0 1px 3px rgb(27 21 48 / 0.04);
+    --elev-pop: 0 18px 40px -12px rgb(46 22 92 / 0.25), 0 4px 12px -4px rgb(46 22 92 / 0.1);
+    --scrim: rgb(18 12 38 / 0.48);
+    --sb-w: 264px;
+    color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+        --bg: 13 11 23;
+        --surface: 21 18 35;
+        --surface-2: 28 24 45;
+        --surface-3: 38 32 60;
+        --border: 42 36 66;
+        --border-strong: 62 54 94;
+        --fg: 238 235 248;
+        --fg-2: 170 163 196;
+        --fg-3: 135 128 164;
+        --primary: 132 84 238;
+        --primary-hover: 150 108 245;
+        --primary-soft: 37 28 68;
+        --primary-ink: 184 156 255;
+        --secondary: 242 95 168;
+        --accent: 255 159 69;
+        --info: 143 162 255;
+        --success: 52 209 161;
+        --warning: 242 179 76;
+        --error: 255 111 132;
+        --c1: 164 124 255;
+        --c2: 242 95 168;
+        --c3: 255 159 69;
+        --elev-card: 0 1px 2px rgb(0 0 0 / 0.3);
+        --elev-pop: 0 20px 48px -12px rgb(0 0 0 / 0.6), 0 0 0 1px rgb(255 255 255 / 0.03);
+        --scrim: rgb(0 0 0 / 0.62);
+        color-scheme: dark;
+    }
+}
+
+:root[data-theme='dark'] {
+    --bg: 13 11 23;
+    --surface: 21 18 35;
+    --surface-2: 28 24 45;
+    --surface-3: 38 32 60;
+    --border: 42 36 66;
+    --border-strong: 62 54 94;
+    --fg: 238 235 248;
+    --fg-2: 170 163 196;
+    --fg-3: 135 128 164;
+    --primary: 132 84 238;
+    --primary-hover: 150 108 245;
+    --primary-soft: 37 28 68;
+    --primary-ink: 184 156 255;
+    --secondary: 242 95 168;
+    --accent: 255 159 69;
+    --info: 143 162 255;
+    --success: 52 209 161;
+    --warning: 242 179 76;
+    --error: 255 111 132;
+    --c1: 164 124 255;
+    --c2: 242 95 168;
+    --c3: 255 159 69;
+    --elev-card: 0 1px 2px rgb(0 0 0 / 0.3);
+    --elev-pop: 0 20px 48px -12px rgb(0 0 0 / 0.6), 0 0 0 1px rgb(255 255 255 / 0.03);
+    --scrim: rgb(0 0 0 / 0.62);
+    color-scheme: dark;
+}
+
+/* Layout variants: `horizontal:` (top navigation, the default) and `vertical:` (sidebar). */
+@custom-variant horizontal (html:not([data-layout='vertical']) &);
+@custom-variant vertical (html[data-layout='vertical'] &);
+
+@theme inline {
+    --font-sans: 'Figtree', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+    --color-bg: rgb(var(--bg));
+    --color-surface: rgb(var(--surface));
+    --color-surface-2: rgb(var(--surface-2));
+    --color-surface-3: rgb(var(--surface-3));
+    --color-line: rgb(var(--border));
+    --color-line-strong: rgb(var(--border-strong));
+    --color-fg: rgb(var(--fg));
+    --color-fg-2: rgb(var(--fg-2));
+    --color-fg-3: rgb(var(--fg-3));
+    --color-primary: rgb(var(--primary));
+    --color-primary-hover: rgb(var(--primary-hover));
+    --color-primary-soft: rgb(var(--primary-soft));
+    --color-primary-ink: rgb(var(--primary-ink));
+    --color-primary-on: rgb(var(--on-primary));
+    --color-secondary: rgb(var(--secondary));
+    --color-accent: rgb(var(--accent));
+    --color-info: rgb(var(--info));
+    --color-success: rgb(var(--success));
+    --color-warning: rgb(var(--warning));
+    --color-error: rgb(var(--error));
+    --color-c1: rgb(var(--c1));
+    --color-c2: rgb(var(--c2));
+    --color-c3: rgb(var(--c3));
+
+    --color-tile-green: #34b25a;
+    --color-tile-green-ink: #07260f;
+    --color-tile-amber: #f4ae3d;
+    --color-tile-amber-ink: #3a2300;
+    --color-tile-coral: #e9475f;
+    --color-tile-coral-ink: #ffffff;
+    --color-tile-pink: #f5afc0;
+    --color-tile-pink-ink: #4a1024;
+    --color-tile-teal: #1e8e8a;
+    --color-tile-teal-ink: #ffffff;
+    --color-tile-sky: #72c8ea;
+    --color-tile-sky-ink: #0b2f40;
+    --color-tile-violet: #8456ec;
+    --color-tile-violet-ink: #ffffff;
+    --color-tile-magenta: #d43f90;
+    --color-tile-magenta-ink: #ffffff;
+
+    --radius-md: 6px;
+    --radius-lg: 10px;
+    --radius-xl: 14px;
+    --radius-2xl: 18px;
+
+    --shadow-card: var(--elev-card);
+    --shadow-pop: var(--elev-pop);
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 88px;
+    }
+
+    body {
+        background: rgb(var(--bg));
+        color: rgb(var(--fg));
+        font-feature-settings: 'ss01', 'cv11';
+    }
+
+    *:focus {
+        outline: none;
+    }
+
+    :focus-visible {
+        outline: 2px solid rgb(var(--primary));
+        outline-offset: 2px;
+        border-radius: 8px;
+    }
+
+    button:not(:disabled),
+    [role='button']:not(:disabled) {
+        cursor: pointer;
+    }
+
+    /* Icon placeholders keep their box before Lucide swaps them for SVGs. */
+    i[data-lucide] {
+        display: inline-block;
+        flex-shrink: 0;
+    }
+}
+
+/* Shared look for text inputs, selects and textareas (see x-field, x-select, x-textarea, x-search-input). */
+@utility form-control {
+    @apply w-full rounded-lg border border-line bg-surface text-sm text-fg shadow-card transition-colors placeholder:text-fg-3 hover:border-line-strong focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-hidden disabled:cursor-not-allowed disabled:bg-surface-2 disabled:text-fg-3 aria-[invalid=true]:border-error aria-[invalid=true]:focus:ring-error/20;
+}
+
+@utility num {
+    font-variant-numeric: tabular-nums;
+}
+
+/* Brand: the only gradient in the product (logo, wordmark, auth panel). */
+@utility brand-grad {
+    background: linear-gradient(135deg, #7638e0 0%, #db2d85 58%, #f58b2b 100%);
+}
+
+@utility brand-word {
+    background: linear-gradient(90deg, #7638e0, #db2d85);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+
+    :root[data-theme='dark'] & {
+        background-image: linear-gradient(90deg, #a47cff, #f25fa8);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) & {
+            background-image: linear-gradient(90deg, #a47cff, #f25fa8);
+        }
+    }
+}
+
+@utility scrim {
+    background: var(--scrim);
+}
+
+@utility scroll-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--border-strong)) transparent;
+}
+
+@utility no-scrollbar {
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/*
+ * ───────── App shell ─────────
+ * Two layouts, chosen with the layout switch and stored as html[data-layout]:
+ *  horizontal (default)  top bar + nav row ≥ 1024px; the sidebar is only a drawer below that
+ *  vertical              drawer < 768px, icon rail 768–1023px, full/collapsible sidebar ≥ 1024px
+ */
+#sidebar {
+    width: 272px;
+    left: -290px;
+    transition:
+        left 0.22s ease,
+        width 0.22s ease;
+}
+
+html.sb-open #sidebar {
+    left: 0;
+    box-shadow: var(--elev-pop);
+}
+
+#shell {
+    transition: padding-left 0.22s ease;
+}
+
+@media (min-width: 768px) {
+    html[data-layout='vertical'] #sidebar {
+        left: 0;
+        width: 76px;
+    }
+
+    html[data-layout='vertical'].sb-open #sidebar {
+        width: 272px;
+    }
+
+    html[data-layout='vertical'] #shell {
+        padding-left: 76px;
+    }
+}
+
+@media (min-width: 1024px) {
+    html.sb-collapsed {
+        --sb-w: 76px;
+    }
+
+    html[data-layout='vertical'] #sidebar,
+    html[data-layout='vertical'].sb-open #sidebar {
+        width: var(--sb-w);
+        box-shadow: none;
+    }
+
+    html[data-layout='vertical'] #shell {
+        padding-left: var(--sb-w);
+    }
+
+    html:not([data-layout='vertical']) #sidebar {
+        display: none;
+    }
+}
+
+/* Show an element in one layout only. */
+html:not([data-layout='vertical']) .only-vertical,
+html[data-layout='vertical'] .only-horizontal {
+    display: none !important;
+}
+
+/* Native <dialog> modals and drawers lock page scroll while open. */
+html:has(dialog[open]) {
+    overflow: hidden;
+}
+
+dialog.drawer[open] {
+    animation: drawer-in 0.22s ease-out;
+}
+
+dialog.modal[open] {
+    animation: toast-in 0.18s ease-out;
+}
+
+dialog::backdrop {
+    background: var(--scrim);
+}
+
+.sb-hide {
+    white-space: nowrap;
+}
+
+html.rail .sb-hide {
+    display: none !important;
+}
+
+html.rail .sb-center {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+html.rail .sb-divider,
+html.rail .sb-rail-dot {
+    display: block !important;
+}
+
+/* ───────── Charts ───────── */
+.chart-grid line {
+    stroke: rgb(var(--border));
+}
+
+.chart-axis {
+    fill: rgb(var(--fg-3));
+    font-size: 11px;
+    font-family: inherit;
+}
+
+/* ───────── Motion that answers user actions ───────── */
+.skeleton {
+    background: linear-gradient(90deg, rgb(var(--surface-2)) 0%, rgb(var(--surface-3)) 45%, rgb(var(--surface-2)) 90%);
+    background-size: 300% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.pop-in {
+    animation: pop-in 0.14s ease-out;
+    transform-origin: top;
+}
+
+.toast-in {
+    animation: toast-in 0.18s ease-out;
+}
+
+.fade-in {
+    animation: fade-in 0.18s ease-out;
+}
+
+.spin {
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 100% 0;
+    }
+    100% {
+        background-position: -100% 0;
+    }
+}
+
+@keyframes pop-in {
+    from {
+        opacity: 0;
+        transform: translateY(-4px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes toast-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes drawer-in {
+    from {
+        opacity: 0;
+        transform: translateX(24px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}
